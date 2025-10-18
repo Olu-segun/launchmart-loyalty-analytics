@@ -30,5 +30,4 @@ Key focus areas include:
 ## 🧭 Database Schema (ERD)
 
 Below is the database schema showing relationships among customers, orders, order items, products, and loyalty points.
-
-![LaunchMart ERD](launchmart_erd.png)
+<img width="826" height="840" alt="image" src="https://github.com/user-attachments/assets/732d67ba-68ac-4eb4-b9d7-6ddbbc03bca0" />
