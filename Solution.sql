@@ -67,7 +67,20 @@ FROM customers c
 INNER JOIN orders o
 ON c.customer_id = o.customer_id
 GROUP BY c.customer_id, c.full_name
-ORDER BY average_order_value DESC
+ORDER BY average_order_value DESC;
+
+--- 7. For all customers who have at least one order, compute customer_id, full_name, total_revenue, 
+---   spend_rank where spend_rank is a dense rank, highest spender = rank 1.
+
+SELECT 
+		c.customer_id,
+		c.full_name,
+		SUM(o.total_amount) AS total_revenue,
+		DENSE_RANK() OVER( ORDER BY SUM(o.total_amount) DESC) AS dense_rank
+FROM customers c
+INNER JOIN orders o
+ON c.customer_id = o.customer_id
+GROUP BY c.customer_id, c.full_name;
 
 
 
