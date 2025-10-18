@@ -26,3 +26,9 @@ Key focus areas include:
 - Data Filtering with `HAVING`, `CASE WHEN`
 - JOIN operations across multiple tables
 - Subqueries and Common Table Expressions (CTEs)
+
+## 🧭 Database Schema (ERD)
+
+Below is the database schema showing relationships among customers, orders, order items, products, and loyalty points.
+
+![LaunchMart ERD](launchmart_erd.png)
