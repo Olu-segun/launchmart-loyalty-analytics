@@ -1,7 +1,28 @@
-LaunchMart Loyalty Analytics
-Business Scenario:
-LaunchMart is a growing African e-commerce company that recently launched a loyalty program to increase customer retention. Customers earn points when they place orders and extra bonus points during promotions. The Data Team has been asked to analyze customer behavior, revenue performance, and loyalty engagement.
+# LaunchMart Loyalty Analytics 🛍️
 
-As a data engineer at LaunchMart, your manager has asked you to explore the company's customer, orders, and loyalty program data to help the marketing and operations teams make informed decisions.
+This project contains SQL-based analyses for **LaunchMart**, a fictional retail loyalty platform.  
+It explores customer purchasing behavior, retention, and revenue performance to drive actionable business insights.
 
-This dataset includes customers, products, orders, order items, and loyalty points earned tables.
+---
+
+## 📊 Project Overview
+
+The goal of this project is to analyze **customer transactions** and **loyalty engagement** using SQL.  
+Key focus areas include:
+
+- Tracking **monthly revenue trends**
+- Calculating **average order value (AOV)**
+- Identifying **inactive customers**
+- Ranking **top-spending customers**
+- Analyzing **customer order frequency and retention**
+
+---
+
+## 🧠 Skills & Concepts Demonstrated
+
+- SQL Aggregations (`SUM`, `AVG`, `COUNT`)
+- Window Functions (`RANK()`, `ROW_NUMBER()`, `PARTITION BY`)
+- Date and Time Functions (`EXTRACT`, `AGE`, `INTERVAL`)
+- Data Filtering with `HAVING`, `CASE WHEN`
+- JOIN operations across multiple tables
+- Subqueries and Common Table Expressions (CTEs)
