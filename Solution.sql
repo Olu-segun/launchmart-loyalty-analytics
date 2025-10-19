@@ -4,19 +4,20 @@ SELECT
 		COUNT(DISTINCT customer_id) AS count_cutomer_joined_2023,
 		EXTRACT(YEAR FROM join_date) AS join_year
 FROM customers
+WHERE EXTRACT(YEAR FROM join_date) = 2023
 GROUP BY  join_year;
 
 --- 2. For each customer return customer_id, full_name, total_revenue (sum of total_amount from orders). Sort descending.
 
-SELECT  
-		C.customer_id,
-		C.full_name,
-		SUM(O.total_amount) AS total_revenue
-FROM customers C
-INNER JOIN orders O
-ON C.customer_id = O.customer_id
-GROUP BY C.customer_id, O.total_amount
-ORDER BY O.total_amount DESC;
+SELECT
+		c.customer_id,
+		c.full_name,
+		SUM(o.total_amount) AS total_revenue
+FROM customers c
+LEFT JOIN orders o
+ON c.customer_id = o.customer_id
+GROUP BY c.customer_id, o.total_amount
+ORDER BY o.total_amount DESC;
 
 --- 3. Return the top 5 customers by total_revenue with their rank.
 
@@ -82,7 +83,45 @@ INNER JOIN orders o
 ON c.customer_id = o.customer_id
 GROUP BY c.customer_id, c.full_name;
 
+--- 8. List customers who placed more than 1 order and show customer_id, full_name, order_count, first_order_date, last_order_date.
+
+SELECT 
+		c.customer_id,
+		c.full_name,
+		COUNT(o.order_id) AS order_count,
+		MIN(order_date) AS first_order_date,
+		MAX(order_date) AS last_order_date
+FROM customers c
+INNER JOIN orders o
+ON c.customer_id = o.customer_id
+GROUP BY c.customer_id, c.full_name
+HAVING COUNT(o.order_id) > 1
+ORDER BY order_count DESC;
+
+--- 9. Compute total loyalty points per customer. Include customers with 0 points.
+
+
+--- 10. Assign loyalty tiers based on total points:
+
+--- Bronze: < 100
+--- Silver: 100–499
+--- Gold: >= 500
+--- Output: tier, tier_count, tier_total_points
+SELECT  
+		c.customer_id,
+		c.full_name,
+		SUM(o.total_amount) AS total_revenue
+		CASE WHEN 
+FROM customers c
+INNER JOIN orders o
+ON c.customer_id = o.customer_id
+GROUP BY c.customer_id, o.total_amount
+ORDER BY o.total_amount DESC;
+
+--- 11. Identify customers who spent more than ₦50,000 in total but have less than 200 loyalty points. Return customer_id, full_name, total_spend, total_points.
+
+--- 12. Flag customers as churn_risk if they have no orders in the last 90 days (relative to 2023-12-31) AND are in the Bronze tier. Return customer_id, full_name, last_order_date, total_points.
 
 
 
-SELECT * FROM orders
+SELECT * FROM order_items
