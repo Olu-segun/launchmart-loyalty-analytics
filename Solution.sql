@@ -124,4 +124,4 @@ ORDER BY o.total_amount DESC;
 
 
 
-SELECT * FROM order_items
+
