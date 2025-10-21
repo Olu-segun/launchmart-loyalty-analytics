@@ -104,7 +104,7 @@ SELECT
 		c.full_name,
 		COALESCE (SUM(l.points_earned),0) AS total_loyalty_points
 FROM customers c
-JOIN loyalty_points l
+LEFT JOIN loyalty_points l
 ON c.customer_id = l.customer_id
 GROUP BY c.customer_id, c.full_name
 ORDER BY total_loyalty_points DESC;
@@ -122,7 +122,7 @@ WITH loyalty_tiers AS (
 				c.full_name,
 				COALESCE (SUM(l.points_earned),0) AS total_loyalty_points
 		FROM customers c
-		JOIN loyalty_points l
+		LEFT JOIN loyalty_points l
 		ON c.customer_id = l.customer_id
 		GROUP BY c.customer_id, c.full_name
 		ORDER BY total_loyalty_points DESC
@@ -140,10 +140,49 @@ GROUP BY tiers
 ORDER BY tier_count DESC;
 
 --- 11. Identify customers who spent more than ₦50,000 in total but have less than 200 loyalty points. Return customer_id, full_name, total_spend, total_points.
+WITH amount_spend AS (
+    SELECT 
+        c.customer_id,
+        c.full_name,
+        SUM(o.total_amount) AS total_spend
+    FROM customers c
+    LEFT JOIN orders o 
+        ON c.customer_id = o.customer_id
+    GROUP BY c.customer_id, c.full_name
+),
+loyalty_points AS (
+    SELECT 
+        l.customer_id,
+        COALESCE(SUM(l.points_earned), 0) AS total_loyalty_points
+    FROM loyalty_points l
+    GROUP BY l.customer_id
+)
+SELECT 
+    a.customer_id,
+    a.full_name,
+    a.total_spend,
+    COALESCE(l.total_loyalty_points, 0) AS total_loyalty_points
+FROM amount_spend a
+LEFT JOIN loyalty_points l
+    ON a.customer_id = l.customer_id
+WHERE a.total_spend > 50000
+  AND COALESCE(l.total_loyalty_points, 0) < 200
+ORDER BY a.total_spend DESC;
+
 
 --- 12. Flag customers as churn_risk if they have no orders in the last 90 days (relative to 2023-12-31) AND are in the Bronze tier. Return customer_id, full_name, last_order_date, total_points.
 
-
-
-
+WITH last_90_days AS  (
+	SELECT
+			c.customer_id,
+			c.full_name,
+			MAX(o.order_date) AS last_order_date,
+			('2023-12-31':: date - MAX(o.order_date)) AS days_interval
+	FROM customers c
+	LEFT JOIN orders o
+	ON c.customer_id = o.customer_id
+	GROUP BY c.customer_id, c.full_name, o.order_date
+	HAVING ('2023-12-31':: date - MAX(o.order_date)) <= 90
+	ORDER BY o.order_date ASC;
+)
 
