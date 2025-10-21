@@ -99,28 +99,50 @@ HAVING COUNT(o.order_id) > 1
 ORDER BY order_count DESC;
 
 --- 9. Compute total loyalty points per customer. Include customers with 0 points.
-
+SELECT 
+		c.customer_id,
+		c.full_name,
+		COALESCE (SUM(l.points_earned),0) AS total_loyalty_points
+FROM customers c
+JOIN loyalty_points l
+ON c.customer_id = l.customer_id
+GROUP BY c.customer_id, c.full_name
+ORDER BY total_loyalty_points DESC;
 
 --- 10. Assign loyalty tiers based on total points:
-
 --- Bronze: < 100
 --- Silver: 100–499
 --- Gold: >= 500
 --- Output: tier, tier_count, tier_total_points
-SELECT  
-		c.customer_id,
-		c.full_name,
-		SUM(o.total_amount) AS total_revenue
-		CASE WHEN 
-FROM customers c
-INNER JOIN orders o
-ON c.customer_id = o.customer_id
-GROUP BY c.customer_id, o.total_amount
-ORDER BY o.total_amount DESC;
+
+WITH loyalty_tiers AS (
+
+		SELECT 
+				c.customer_id,
+				c.full_name,
+				COALESCE (SUM(l.points_earned),0) AS total_loyalty_points
+		FROM customers c
+		JOIN loyalty_points l
+		ON c.customer_id = l.customer_id
+		GROUP BY c.customer_id, c.full_name
+		ORDER BY total_loyalty_points DESC
+)
+SELECT
+		CASE 
+			WHEN total_loyalty_points < 100 THEN 'Bronze'
+			WHEN total_loyalty_points BETWEEN 100 AND 499 THEN 'Silver'
+			ELSE 'Gold'
+		END AS tiers,
+		COUNT(*) AS tier_count,
+		SUM(total_loyalty_points) AS tier_total_points
+FROM loyalty_tiers
+GROUP BY tiers
+ORDER BY tier_count DESC;
 
 --- 11. Identify customers who spent more than ₦50,000 in total but have less than 200 loyalty points. Return customer_id, full_name, total_spend, total_points.
 
 --- 12. Flag customers as churn_risk if they have no orders in the last 90 days (relative to 2023-12-31) AND are in the Bronze tier. Return customer_id, full_name, last_order_date, total_points.
+
 
 
 
