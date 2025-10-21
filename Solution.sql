@@ -172,17 +172,49 @@ ORDER BY a.total_spend DESC;
 
 --- 12. Flag customers as churn_risk if they have no orders in the last 90 days (relative to 2023-12-31) AND are in the Bronze tier. Return customer_id, full_name, last_order_date, total_points.
 
-WITH last_90_days AS  (
-	SELECT
-			c.customer_id,
-			c.full_name,
-			MAX(o.order_date) AS last_order_date,
-			('2023-12-31':: date - MAX(o.order_date)) AS days_interval
-	FROM customers c
-	LEFT JOIN orders o
-	ON c.customer_id = o.customer_id
-	GROUP BY c.customer_id, c.full_name, o.order_date
-	HAVING ('2023-12-31':: date - MAX(o.order_date)) <= 90
-	ORDER BY o.order_date ASC;
+WITH last_order_days AS (
+    SELECT
+        c.customer_id,
+        c.full_name,
+        MAX(o.order_date) AS last_order_date
+    FROM customers c
+    LEFT JOIN orders o 
+        ON c.customer_id = o.customer_id
+    GROUP BY c.customer_id, c.full_name
+),
+loyalty_points AS (
+    SELECT 
+        c.customer_id,
+        COALESCE(SUM(l.points_earned), 0) AS total_points
+    FROM customers c
+    LEFT JOIN loyalty_points l 
+        ON c.customer_id = l.customer_id
+    GROUP BY c.customer_id
+),
+loyalty_tiers AS (
+    SELECT
+        lp.customer_id,
+        lp.total_points,
+        CASE 
+            WHEN lp.total_points < 100 THEN 'Bronze'
+            WHEN lp.total_points BETWEEN 100 AND 499 THEN 'Silver'
+            ELSE 'Gold'
+        END AS tier
+    FROM loyalty_points lp
 )
+SELECT 
+    lo.customer_id,
+    lo.full_name,
+    lo.last_order_date,
+    lt.total_points
+FROM last_order_days lo
+JOIN loyalty_tiers lt 
+    ON lo.customer_id = lt.customer_id
+WHERE (('2023-12-31'::date - COALESCE(lo.last_order_date, '1900-01-01'::date)) > 90)
+  AND lt.tier = 'Bronze'
+ORDER BY lo.last_order_date ASC;
+
+
+
+
 
