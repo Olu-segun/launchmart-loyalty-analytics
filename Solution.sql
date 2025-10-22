@@ -210,8 +210,9 @@ SELECT
 FROM last_order_days lo
 JOIN loyalty_tiers lt 
     ON lo.customer_id = lt.customer_id
-WHERE (('2023-12-31'::date - COALESCE(lo.last_order_date, '1900-01-01'::date)) > 90)
-  AND lt.tier = 'Bronze'
+WHERE lt.tier = 'Bronze'
+GROUP BY lo.customer_id, lo.full_name,lo.last_order_date, lt.total_points
+HAVING ('2023-12-31':: date - MAX(lo.last_order_date)) >= 90
 ORDER BY lo.last_order_date ASC;
 
 
