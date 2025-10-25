@@ -1,68 +1,67 @@
-# LaunchMart Loyalty Analytics 🛍️
+LaunchMart Loyalty Analytics 🛍️
 
-A SQL-based data analysis project for **LaunchMart**, a fictional retail loyalty platform, focusing on customer behavior, purchase patterns, and reward analytics. This project aims to provide actionable insights to improve the loyalty program's effectiveness and drive revenue growth.
+A SQL-based data analysis project for LaunchMart, a fictional retail loyalty platform, focusing on customer behavior, purchase patterns, and reward analytics.
+This project aims to provide actionable insights to improve the loyalty program's effectiveness and drive revenue growth.
 
-## ✨ Key Features & Benefits
+✨ Key Features & Benefits
 
-*   **Customer Segmentation:** Identify valuable customer segments based on purchase behavior.
-*   **Purchase Pattern Analysis:** Understand product preferences and buying trends.
-*   **Loyalty Program Effectiveness:** Measure the impact of loyalty programs on customer retention and spending.
-*   **Revenue Forecasting:** Project future revenue based on historical trends.
-*   **Actionable Insights:** Provide recommendations to improve the loyalty program and increase customer engagement.
+Customer Segmentation: Identify valuable customer segments based on purchase behavior.
 
-## ⚙️ Prerequisites & Dependencies
+Purchase Pattern Analysis: Understand product preferences and buying trends.
 
-*   **SQL Database:** A relational database management system (RDBMS) such as MySQL, PostgreSQL, or SQLite.
-*   **SQL Client:** A tool for executing SQL queries, like Dbeaver, SQL Developer, or pgAdmin.
+Loyalty Program Effectiveness: Measure the impact of loyalty programs on customer retention and spending.
 
-## 🚀 Installation & Setup Instructions
+Revenue Forecasting: Project future revenue based on historical trends.
 
-1.  **Clone the Repository:**
+Actionable Insights: Provide recommendations to improve the loyalty program and increase customer engagement.
 
-    ```bash
-    git clone https://github.com/Olu-segun/launchmart-loyalty-analytics.git
-    cd launchmart-loyalty-analytics
-    ```
+⚙️ Prerequisites & Dependencies
 
-2.  **Database Setup:**
+SQL Database: A relational database management system (RDBMS) such as PostgreSQL (recommended), MySQL, or SQLite.
 
-    *   Create a new database named `launchmart_loyalty`.
-    *   Execute the schema script (`01_schema.sql`) to create the required tables:
+SQL Client: A tool for executing SQL queries, like DBeaver, pgAdmin, or Azure Data Studio.
 
-        ```bash
-        # Example using MySQL
-        mysql -u <username> -p launchmart_loyalty < 01_schema.sql
-        ```
+🚀 Installation & Setup Instructions
+1. Clone the Repository
+git clone https://github.com/Olu-segun/launchmart-loyalty-analytics.git
+cd launchmart-loyalty-analytics
 
-3.  **Seed Data:**
+2. Database Setup
 
-    *   Populate the database with initial data using the seed data script (`02_seed_data.sql`):
+Create a new database named launchmart_loyalty.
 
-        ```bash
-        # Example using MySQL
-        mysql -u <username> -p launchmart_loyalty < 02_seed_data.sql
-        ```
+Execute the schema script (01_schema.sql) to create the required tables:
 
-## 💡 Usage Examples
+# Example using PostgreSQL
+psql -U <username> -d postgres -c "CREATE DATABASE launchmart_loyalty;"
+psql -U <username> -d launchmart_loyalty -f 01_schema.sql
 
-1.  **Execute SQL Queries:**
+3. Seed Data
 
-    *   Use your preferred SQL client to connect to the `launchmart_loyalty` database.
-    *   Open the `Solution.sql` file to find pre-written queries for analyzing the data.
-    *   Execute the queries to gain insights into customer behavior, purchase patterns, and loyalty program effectiveness.
+Populate the database with initial data using the seed data script (02_seed_data.sql):
 
-    ```sql
-    -- Example Query from Solution.sql
-    SELECT
-        DATE_TRUNC('month', transaction_date) AS transaction_month,
-        SUM(transaction_amount) AS monthly_revenue
-    FROM
-        transactions
-    GROUP BY
-        transaction_month
-    ORDER BY
-        transaction_month;
-    ```
+# Example using PostgreSQL
+psql -U <username> -d launchmart_loyalty -f 02_seed_data.sql
+
+💡 Usage Examples
+Execute SQL Queries
+
+Use your preferred SQL client to connect to the launchmart_loyalty database.
+
+Open the Solution.sql file to find pre-written queries for analyzing the data.
+
+Execute the queries to gain insights into customer behavior, purchase patterns, and loyalty program effectiveness.
+
+-- Example Query from Solution.sql
+SELECT
+    DATE_TRUNC('month', transaction_date) AS transaction_month,
+    SUM(transaction_amount) AS monthly_revenue
+FROM
+    transactions
+GROUP BY
+    transaction_month
+ORDER BY
+    transaction_month;
 
 ## 🛠️ Configuration Options
 
