@@ -39,8 +39,9 @@ A SQL-based data analysis project for **LaunchMart**, a fictional retail loyalty
     *   Execute the schema script (`01_schema.sql`) to create the required tables:
 
         ```bash
-        # Example using MySQL
-        mysql -u <username> -p launchmart_loyalty < 01_schema.sql
+        # Example using PostgreSQL
+        psql -U <username> -d launchmart_loyalty -f 01_schema.sql
+
         ```
 
 3.  **Seed Data:**
@@ -63,14 +64,15 @@ A SQL-based data analysis project for **LaunchMart**, a fictional retail loyalty
     ```sql
     -- Example Query from Solution.sql
     SELECT
-        DATE_TRUNC('month', transaction_date) AS transaction_month,
-        SUM(transaction_amount) AS monthly_revenue
-    FROM
-        transactions
-    GROUP BY
-        transaction_month
-    ORDER BY
-        transaction_month;
+    EXTRACT(MONTH FROM transaction_date) AS transaction_month,
+    SUM(transaction_amount) AS monthly_revenue
+FROM
+    transactions
+GROUP BY
+    transaction_month
+ORDER BY
+    transaction_month;
+
     ```
 
 ## 🛠️ Configuration Options
