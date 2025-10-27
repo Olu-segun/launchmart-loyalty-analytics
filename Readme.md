@@ -49,8 +49,9 @@ A SQL-based data analysis project for **LaunchMart**, a fictional retail loyalty
     *   Populate the database with initial data using the seed data script (`02_seed_data.sql`):
 
         ```bash
-        # Example using MySQL
-        mysql -u <username> -p launchmart_loyalty < 02_seed_data.sql
+        # Example using PostgreSQL
+        psql -U <username> -d launchmart_loyalty -f 02_seed_data.sql
+
         ```
 
 ## 💡 Usage Examples
@@ -63,15 +64,14 @@ A SQL-based data analysis project for **LaunchMart**, a fictional retail loyalty
 
     ```sql
     -- Example Query from Solution.sql
-    SELECT
-    EXTRACT(MONTH FROM transaction_date) AS transaction_month,
-    SUM(transaction_amount) AS monthly_revenue
-FROM
-    transactions
-GROUP BY
-    transaction_month
-ORDER BY
-    transaction_month;
+SELECT 
+		EXTRACT(YEAR FROM order_date) AS year,
+		EXTRACT(MONTH FROM order_date) AS month,
+		SUM(total_amount) AS monthly_revenue
+FROM orders
+WHERE EXTRACT(YEAR FROM order_date) = 2023
+GROUP BY EXTRACT(YEAR FROM order_date), EXTRACT(MONTH FROM order_date)
+ORDER BY month ASC;
 
     ```
 
